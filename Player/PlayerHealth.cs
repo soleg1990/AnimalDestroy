@@ -7,6 +7,7 @@ public class PlayerHealth : MonoBehaviour {
     [SerializeField] float maxHealth = 100f;
 
     private float currentHealth;
+    public float CurrentHealth { get { return currentHealth; } }
 
     private void Awake()
     {

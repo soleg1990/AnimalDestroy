@@ -14,11 +14,12 @@ public class Projectile : MonoBehaviour {
         set
         {
             hasFinished = value;
-            if (hasFinished)
-            {
-                gameObject.SetActive(false);
-            }
-            else
+            //if (hasFinished)
+            //{
+            //    gameObject.SetActive(false);
+            //}
+            //else
+            if (!hasFinished)
             {
                 hasFly = false;
             }
@@ -26,13 +27,6 @@ public class Projectile : MonoBehaviour {
     }
 
     private bool hasFly;
-
-    private ParticleSystem bang;
-
-	// Use this for initialization
-	void Start () {
-        bang = GetComponent<ParticleSystem>();
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -44,7 +38,7 @@ public class Projectile : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!hasFly || HasFinished) return;
+        if (!hasFly || hasFinished) return;
 
         var collisionObject = collision.gameObject;
 
@@ -55,11 +49,7 @@ public class Projectile : MonoBehaviour {
                 collisionObject.GetComponentInParent<PlayerHealth>().TakeDamage(damage);
             }
 
-            bang.Play();
-            StartCoroutine(new Delay().DelayAndProcessAction(
-                () => HasFinished = true,
-                bang.main.duration
-            ));
+            HasFinished = true;
         }
     }
 

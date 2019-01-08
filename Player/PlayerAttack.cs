@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour {
 
     [SerializeField] GameObject Sheep;
-    [SerializeField] Projectile Projectile;
     [SerializeField] Transform ProjectileTransform;
 
     private GameObject animal;
@@ -13,36 +12,21 @@ public class PlayerAttack : MonoBehaviour {
     private bool makeAim;
 
     private bool isMyTurn;
-    public bool IsMyTurn
+    public bool IsMyTurn { get { return isMyTurn; } }
+
+    public void TakeTurn(Projectile projectile)
     {
-        get { return isMyTurn; }
-        set
-        {
-            isMyTurn = value;
-            if (isMyTurn)
-            {
-                ChargeTheWeapon();
-            }
-            else
-            {
-                HasShot = false;
-                Projectile.HasFinished = false;
-            }
-        }
+        projectile.GetComponent<Rigidbody>().velocity = new Vector3();
+        projectile.transform.position = ProjectileTransform.position;
+        //projectile.HasFinished = false;
+        projectile.gameObject.SetActive(true);
+
+        isMyTurn = true;
     }
 
-    public bool HasShot;
-
-    private void ChargeTheWeapon()
+    public void GiveTurn()
     {
-        Projectile.GetComponent<Rigidbody>().velocity = new Vector3();
-        Projectile.transform.position = ProjectileTransform.position;
-        Projectile.gameObject.SetActive(true);
-    }
-
-    private void Start()
-    {
-        
+        isMyTurn = false;
     }
 
     //TODO систему частиц перенести в GameManager и пусть он решает, когда ее показывать (когда пуля пульнула). Пулю при этом дизейблить - один хер камера не двинется, пока 
@@ -62,6 +46,9 @@ public class PlayerAttack : MonoBehaviour {
     //TODO если здоровье закончилось, то объявляем победителя
     //TODO возможность, чтобы камера до определенной границы могла скрольнуть вверх мышкой (а потом и обратно, если передумали), чтобы можно было с большей высоты сбросить зверя
     //  в таком случае она должна потом и вниз проследовать за падающим зверем
+
+    //TODO Советы от Юльки: обучалка, можно жизни показывать (не понятен смысл происхоящего)
+    //  TODO Разрушающиеся стены перед катапультами
 
     //TODO по поводу искуственного интеллекта: комп делает пристрелочный сброс в предполагаемой точке с предплагаемой высоты, потом тупо меняет высоту, если не помогло - точку
     //  нужен список расстояний и точек м.б. с высотами (игра компов друг с другом и запись значений при попадании в файл). Расстояния между игроками можно самому выставлять
@@ -84,16 +71,11 @@ public class PlayerAttack : MonoBehaviour {
                 makeAim = false;
             }
         }
-        else if (Projectile.HasFinished)
-        {
-            HasShot = true;
-        }
     }
 
     public void CreateSheep()
     {
         if (!isMyTurn) return;
-        //projectile = Instantiate(Sheep)
         animal = Sheep;
         SetAnimalTransform();
         animalRig = Sheep.GetComponent<Rigidbody>();

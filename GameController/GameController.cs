@@ -1,20 +1,28 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Utils;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
+    [SerializeField] float delayBeforeChangePlayer = 1f;
     [SerializeField] GameObject player1;
     [SerializeField] GameObject player2;
+    [SerializeField] Projectile projectile;
     [SerializeField] Button ButtonSheep;
+    [SerializeField] ParticleSystem bangPrefab;
 
     private PlayerAttack player1Attack;
     private PlayerAttack player2Attack;
+    private PlayerHealth player1Health;
+    private PlayerHealth player2Health;
+
+    private bool canChangeActivePlayer;
 
     private void Awake()
     {
         player1Attack = player1.GetComponent<PlayerAttack>();
         player2Attack = player2.GetComponent<PlayerAttack>();
-        //player1Attack.enabled = false;
-        //player2Attack.enabled = false;
+        player1Health = player1.GetComponent<PlayerHealth>();
+        player2Health = player2.GetComponent<PlayerHealth>();
         SetPlayer2RandomPosition();
     }
 
@@ -34,8 +42,7 @@ public class GameController : MonoBehaviour {
     private void OnCameraHasShownPlayers(object sender, System.EventArgs e)
     {
         SetButtonsEnable();
-        //gameHasStarted = true;
-        player1Attack.IsMyTurn = true;
+        player1Attack.TakeTurn(projectile);
     }
 
     private void SetButtonsDisable()
@@ -50,23 +57,46 @@ public class GameController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        //if (gameHasStarted)
         //TODO disable кнопок после сбрасывания зверя
+        if (projectile.HasFinished)
+        {
+            BlowUp();
+        }
+        if (canChangeActivePlayer)
+        {
+            ChangePlayer();
+        }
+    }
+
+    private void ChangePlayer()
+    {
+        canChangeActivePlayer = false;
+
         if (player1Attack.IsMyTurn)
         {
-            if (player1Attack.HasShot)
-            {
-                player2Attack.IsMyTurn = true;
-                player1Attack.IsMyTurn = false;
-            }
+            player1Attack.GiveTurn();
+            if (player2Health.CurrentHealth > 0) player2Attack.TakeTurn(projectile);
         }
-        else if (player2Attack.IsMyTurn)
+        else
         {
-            if (player2Attack.HasShot)
-            {
-                player1Attack.IsMyTurn = true;
-                player2Attack.IsMyTurn = false;
-            }
+            player2Attack.GiveTurn();
+            if (player1Health.CurrentHealth > 0) player1Attack.TakeTurn(projectile);
         }
-	}
+    }
+
+    private void BlowUp()
+    {
+        var bang = Instantiate(bangPrefab);
+        bang.transform.position = projectile.transform.position;
+        projectile.gameObject.SetActive(false);
+        projectile.HasFinished = false;
+        bang.Play();
+        StartCoroutine(new Delay().DelayAndProcessAction(
+            () => {
+                Destroy(bang);
+                canChangeActivePlayer = true;
+            },
+            delayBeforeChangePlayer //bang.main.duration
+        ));
+    }
 }

@@ -25,7 +25,6 @@ public class CameraOnStart : MonoBehaviour {
         startPosition = transform.position;
     }
 	
-    //TODO сделать, чтобы камера сначала показывала игрока 1, а потом игрока 2, затем возвращалась к игроку 1, но чтобы он был с краю
 	// Update is called once per frame
 	void Update () {
         if (!HasAllMoving)
@@ -96,7 +95,6 @@ public class CameraOnStart : MonoBehaviour {
     //    }
     //}
 
-    //Todo высчитывать позицию камеры, чтобы эта точка была посередине экрана moving camera to center
     private void MoveToPoint(Vector3 point)
     {
         var journeyLength = Vector3.Distance(transform.position, point);

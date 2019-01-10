@@ -93,7 +93,7 @@ public class GameController : MonoBehaviour {
         bang.Play();
         StartCoroutine(new Delay().DelayAndProcessAction(
             () => {
-                Destroy(bang);
+                Destroy(bang.gameObject);
                 canChangeActivePlayer = true;
             },
             delayBeforeChangePlayer //bang.main.duration

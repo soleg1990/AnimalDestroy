@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour {
     [SerializeField] GameObject player2;
     [SerializeField] Projectile projectile;
     [SerializeField] Button ButtonSheep;
+    [SerializeField] Button ButtonPig;
+    [SerializeField] Button ButtonCow;
     [SerializeField] ParticleSystem bangPrefab;
 
     private PlayerAttack player1Attack;
@@ -48,11 +50,15 @@ public class GameController : MonoBehaviour {
     private void SetButtonsDisable()
     {
         ButtonSheep.interactable = false;
+        ButtonPig.interactable = false;
+        ButtonCow.interactable = false;
     }
 
     private void SetButtonsEnable()
     {
         ButtonSheep.interactable = true;
+        ButtonPig.interactable = true;
+        ButtonCow.interactable = true;
     }
 
     // Update is called once per frame

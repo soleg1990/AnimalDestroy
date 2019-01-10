@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour {
 
-    [SerializeField] GameObject Sheep;
+    [SerializeField] GameObject sheep;
+    [SerializeField] GameObject pig;
+    [SerializeField] GameObject cow;
     [SerializeField] Transform ProjectileTransform;
 
     private GameObject animal;
@@ -29,6 +31,8 @@ public class PlayerAttack : MonoBehaviour {
         isMyTurn = false;
     }
 
+    //TODO рефакторинг - сделать фабрику животных. Все равно только 1 экземпляр в единицу времени, так пусть и список префабов будет у одного объекта
+    //TODO выход из игры (меню при нажатии на Esc и при победе одного из игроков)
     //TODO при разрушении катапульты сделать ей еще и случайное вращение
     //TODO сделать меню
     //TODO сделать остальных животных
@@ -72,12 +76,29 @@ public class PlayerAttack : MonoBehaviour {
 
     public void CreateSheep()
     {
+        CreateAnimal(sheep);
+    }
+
+    public void CreatePig()
+    {
+        CreateAnimal(pig);
+    }
+
+    public void CreateCow()
+    {
+        CreateAnimal(cow);
+    }
+
+    private void CreateAnimal(GameObject createdAnimal)
+    {
         if (!isMyTurn) return;
-        animal = Sheep;
+        if (animal && animal.activeSelf)
+            animal.SetActive(false);
+        animal = createdAnimal;
         SetAnimalTransform();
-        animalRig = Sheep.GetComponent<Rigidbody>();
+        animalRig = createdAnimal.GetComponent<Rigidbody>();
         animalRig.isKinematic = true;
-        Sheep.SetActive(true);
+        createdAnimal.SetActive(true);
         makeAim = true;
     }
 

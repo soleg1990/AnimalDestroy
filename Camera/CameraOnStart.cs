@@ -16,7 +16,7 @@ public class CameraOnStart : MonoBehaviour {
     private Vector3 player2CameraPosition, player1CameraPosition, startPosition;
 
     //public delegate void CameraHasShownPlayers();
-    public static event EventHandler OnCameraHasShownPlayers;
+    public event EventHandler OnCameraHasShownPlayers;
 
     // Use this for initialization
     void Start () {

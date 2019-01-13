@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] float delayBeforeChangePlayer = 1f;
     [SerializeField] GameObject player1;
     [SerializeField] GameObject player2;
-    [SerializeField] Projectile projectile;
+    [SerializeField] Projectile projectilePrefab;
     [SerializeField] Button ButtonSheep;
     [SerializeField] Button ButtonPig;
     [SerializeField] Button ButtonCow;
@@ -18,12 +18,17 @@ public class GameController : MonoBehaviour {
     private PlayerAttack player2Attack;
     private PlayerHealth player1Health;
     private PlayerHealth player2Health;
+    private Projectile projectile;
+    private CameraOnStart cameraOnStart;
 
     private bool canChangeActivePlayer;
     private bool gameOver;
 
     private void Awake()
     {
+        cameraOnStart = FindObjectOfType<CameraOnStart>();
+        projectile = Instantiate(projectilePrefab);
+        projectile.gameObject.SetActive(false);
         player1Attack = player1.GetComponent<PlayerAttack>();
         player2Attack = player2.GetComponent<PlayerAttack>();
         player1Health = player1.GetComponent<PlayerHealth>();
@@ -41,7 +46,7 @@ public class GameController : MonoBehaviour {
     void Start() {
         SetButtonsDisable();
 
-        CameraOnStart.OnCameraHasShownPlayers += OnCameraHasShownPlayers;
+        cameraOnStart.OnCameraHasShownPlayers += OnCameraHasShownPlayers;
     }
 
     private void OnCameraHasShownPlayers(object sender, System.EventArgs e)

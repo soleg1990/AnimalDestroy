@@ -39,10 +39,14 @@ public class PlayerHealth : MonoBehaviour {
         Destroy(gameObject.GetComponentInChildren<HingeJoint>());
         var xVelosity = Random.Range(-30, 30);
         var yVelosity = Random.Range(1, 30);
-        var zVelosity = Random.Range(-3, 30);
+        var zVelosity = 0;//Random.Range(-3, 30);
+        var xTorque = Random.Range(-30, 30);
+        var yTorque = Random.Range(-30, 30);
+        var zTorque = Random.Range(-30, 30);
         foreach (var rig in GetComponentsInChildren<Rigidbody>())
         {
             rig.velocity = new Vector3(xVelosity, yVelosity, zVelosity);
+            rig.AddTorque(new Vector3(xTorque, yTorque, zTorque));
         }
     }
 }

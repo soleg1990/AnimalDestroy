@@ -35,15 +35,15 @@ public class GameController : MonoBehaviour {
         player2.transform.position = temp;
     }
 
-    void Start () {
+    void Start() {
         SetButtonsDisable();
 
         CameraOnStart.OnCameraHasShownPlayers += OnCameraHasShownPlayers;
-	}
+    }
 
     private void OnCameraHasShownPlayers(object sender, System.EventArgs e)
     {
-        SetButtonsEnable();
+        //SetButtonsEnable();
         player1Attack.TakeTurn(projectile);
     }
 
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update() {
         //TODO disable кнопок после сбрасывания зверя
         if (projectile.HasFinished)
         {
@@ -71,6 +71,14 @@ public class GameController : MonoBehaviour {
         if (canChangeActivePlayer)
         {
             ChangePlayer();
+        }
+        if ((player1Attack.IsMyTurn && !player1Attack.AnimalSpent) || (player2Attack.IsMyTurn && !player2Attack.AnimalSpent))
+        {
+            SetButtonsEnable();
+        }
+        else
+        {
+            SetButtonsDisable();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
@@ -10,6 +11,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] Button ButtonSheep;
     [SerializeField] Button ButtonPig;
     [SerializeField] Button ButtonCow;
+    [SerializeField] Text playerWinText;
     [SerializeField] ParticleSystem bangPrefab;
 
     private PlayerAttack player1Attack;
@@ -18,6 +20,7 @@ public class GameController : MonoBehaviour {
     private PlayerHealth player2Health;
 
     private bool canChangeActivePlayer;
+    private bool gameOver;
 
     private void Awake()
     {
@@ -62,7 +65,10 @@ public class GameController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        if (gameOver) return;
+
         //TODO disable кнопок после сбрасывания зверя
         if (projectile.HasFinished)
         {
@@ -72,6 +78,13 @@ public class GameController : MonoBehaviour {
         {
             ChangePlayer();
         }
+        CheckAnimalButtonsEnable();
+        CheckWin();
+    }
+
+    private void CheckAnimalButtonsEnable()
+    {
+        //TODO вынести всю эту хурму в отдельный компонент
         if ((player1Attack.IsMyTurn && !player1Attack.AnimalSpent) || (player2Attack.IsMyTurn && !player2Attack.AnimalSpent))
         {
             SetButtonsEnable();
@@ -80,6 +93,34 @@ public class GameController : MonoBehaviour {
         {
             SetButtonsDisable();
         }
+    }
+
+    private void CheckWin()
+    {
+        if (player1Health.CurrentHealth <= 0)
+        {
+            OnPlayerWin("Player2");
+        }
+        else if (player2Health.CurrentHealth <= 0)
+        {
+            OnPlayerWin("Player1");
+        }
+    }
+
+    private void OnPlayerWin(string playerName)
+    {
+        gameOver = true;
+        StartCoroutine(new Delay().DelayAndProcessAction(
+            () => {
+                playerWinText.gameObject.SetActive(true);
+                playerWinText.text = playerName + " Win!";
+            },
+            2f
+        ));
+        StartCoroutine(new Delay().DelayAndProcessAction(
+            () => SceneManager.LoadScene(0),
+            5f
+        ));
     }
 
     private void ChangePlayer()

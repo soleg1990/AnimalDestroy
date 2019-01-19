@@ -37,12 +37,12 @@ public class PlayerHealth : MonoBehaviour {
     private void CrushCatapult()
     {
         Destroy(gameObject.GetComponentInChildren<HingeJoint>());
-        var xVelosity = Random.Range(-30, 30);
-        var yVelosity = Random.Range(1, 30);
+        var xVelosity = Random.Range(-15, 15);
+        var yVelosity = Random.Range(1, 15);
         var zVelosity = 0;//Random.Range(-3, 30);
-        var xTorque = Random.Range(-30, 30);
-        var yTorque = Random.Range(-30, 30);
-        var zTorque = Random.Range(-30, 30);
+        var xTorque = Random.Range(-300, 300);
+        var yTorque = Random.Range(-300, 300);
+        var zTorque = Random.Range(-300, 300);
         foreach (var rig in GetComponentsInChildren<Rigidbody>())
         {
             rig.velocity = new Vector3(xVelosity, yVelosity, zVelosity);

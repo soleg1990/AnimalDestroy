@@ -53,6 +53,7 @@ public class GameController : MonoBehaviour {
     {
         //SetButtonsEnable();
         player1Attack.TakeTurn(projectile);
+        //player1Health.TakeDamage(1000);
     }
 
     private void SetButtonsDisable()

@@ -11,6 +11,7 @@ public class PlayerAttack : MonoBehaviour {
 
     private GameObject animal;
     private Rigidbody animalRig;
+    private BoxCollider animalCollider;
     private bool makeAim;
 
     private bool isMyTurn;
@@ -47,7 +48,6 @@ public class PlayerAttack : MonoBehaviour {
     //  Но в таком случае это уже либо не пошаговая игра будет, либо пехота должна останавливаться, когда ход переходит
     //TODO вместо PlayerWin текста показывать целое окно, в котором будет возможность рестарта или возврата в меню. 
     //      Окно будет показываться при выигрыше, нажатии на Esc или клику на красивую кнопочку с крестиком
-    //TODO баг: если несброшенным животным навести на катапульту, то они взаимодействуют
     //TODO если игрок промахнулся животным, то ход переходит следующему
     //TODO при смерти катапульты - частицы с черепами
     //TODO рефакторинг - сделать фабрику животных. Все равно только 1 экземпляр в единицу времени, так пусть и список префабов будет у одного объекта
@@ -85,6 +85,7 @@ public class PlayerAttack : MonoBehaviour {
             if (Input.GetMouseButtonDown(0))
             {
                 animalRig.isKinematic = false;
+                animalCollider.enabled = true;
                 makeAim = false;
             }
         }
@@ -114,6 +115,8 @@ public class PlayerAttack : MonoBehaviour {
         SetAnimalTransform();
         animalRig = createdAnimal.GetComponent<Rigidbody>();
         animalRig.isKinematic = true;
+        animalCollider = createdAnimal.GetComponent<BoxCollider>();
+        animalCollider.enabled = false;
         createdAnimal.SetActive(true);
         makeAim = true;
         animalSpent = true;

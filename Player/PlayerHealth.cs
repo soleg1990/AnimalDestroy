@@ -37,8 +37,8 @@ public class PlayerHealth : MonoBehaviour {
     private void CrushCatapult()
     {
         Destroy(gameObject.GetComponentInChildren<HingeJoint>());
-        var xVelosity = Random.Range(-15, 15);
-        var yVelosity = Random.Range(1, 15);
+        var xVelosity = Random.Range(-15, -5) * Mathf.Sign(transform.rotation.y); //чтобы назад башню снесло
+        var yVelosity = Random.Range(3, 15);
         var zVelosity = 0;//Random.Range(-3, 30);
         var xTorque = Random.Range(-300, 300);
         var yTorque = Random.Range(-300, 300);

@@ -54,6 +54,7 @@ public class GameController : MonoBehaviour {
         //SetButtonsEnable();
         player1Attack.TakeTurn(projectile);
         //player1Health.TakeDamage(1000);
+        //player2Health.TakeDamage(1000);
     }
 
     private void SetButtonsDisable()
@@ -75,10 +76,9 @@ public class GameController : MonoBehaviour {
     {
         if (gameOver) return;
 
-        //TODO disable кнопок после сбрасывания зверя
         if (projectile.HasFinished)
         {
-            BlowUp();
+            BlowUpProjectile();
         }
         if (canChangeActivePlayer)
         {
@@ -145,7 +145,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    private void BlowUp()
+    private void BlowUpProjectile()
     {
         var bang = Instantiate(bangPrefab);
         bang.transform.position = projectile.transform.position;

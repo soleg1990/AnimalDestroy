@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour {
 
     private GameObject animal;
     private Rigidbody animalRig;
-    private BoxCollider animalCollider;
+    private Collider animalCollider;
     private bool makeAim;
 
     private bool isMyTurn;
@@ -115,7 +115,7 @@ public class PlayerAttack : MonoBehaviour {
         SetAnimalTransform();
         animalRig = createdAnimal.GetComponent<Rigidbody>();
         animalRig.isKinematic = true;
-        animalCollider = createdAnimal.GetComponent<BoxCollider>();
+        animalCollider = createdAnimal.GetComponent<Collider>();
         animalCollider.enabled = false;
         createdAnimal.SetActive(true);
         makeAim = true;

@@ -38,6 +38,7 @@ public class PlayerAttack : MonoBehaviour {
 
     //TODO из критических недоработок сейчас: промах животного и меню для выхода)
     //TODO не помню, писал ли я это, но ЖИЗНИ!
+    //TODO возможность включать/выключать звуки и музыку
     //todo иногда наблюдается баг - животное исчезает. И кнопки тоже задизейблены при этом)
     //todo сделать нормальный фон за пределами игрового поля
     //TODO животных отрисовать в шлемах, со щитами)
@@ -104,6 +105,7 @@ public class PlayerAttack : MonoBehaviour {
     public void CreateCow()
     {
         CreateAnimal(cow);
+        cow.GetComponent<AudioSource>().Play();
     }
 
     private void CreateAnimal(GameObject createdAnimal)

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
     [SerializeField] float maxHealth = 100f;
+    [SerializeField] Slider healthSlider;
 
     private float currentHealth;
     public float CurrentHealth { get { return currentHealth; } }
@@ -27,6 +29,7 @@ public class PlayerHealth : MonoBehaviour {
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        healthSlider.value = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         if (currentHealth <= 0)
         {

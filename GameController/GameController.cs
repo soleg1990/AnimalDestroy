@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] Button ButtonCow;
     [SerializeField] Text playerWinText;
     [SerializeField] ParticleSystem bangPrefab;
+    [SerializeField] AudioClip explosion;
 
     private PlayerAttack player1Attack;
     private PlayerAttack player2Attack;
@@ -20,12 +21,15 @@ public class GameController : MonoBehaviour {
     private PlayerHealth player2Health;
     private Projectile projectile;
     private CameraOnStart cameraOnStart;
+    private AudioSource audioSource;
 
     private bool canChangeActivePlayer;
     private bool gameOver;
 
     private void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = explosion;
         cameraOnStart = FindObjectOfType<CameraOnStart>();
         projectile = Instantiate(projectilePrefab);
         projectile.gameObject.SetActive(false);
@@ -144,14 +148,15 @@ public class GameController : MonoBehaviour {
             if (player1Health.CurrentHealth > 0) player1Attack.TakeTurn(projectile);
         }
     }
-
+ 
     private void BlowUpProjectile()
     {
         var bang = Instantiate(bangPrefab);
         bang.transform.position = projectile.transform.position;
+        bang.Play();
+        audioSource.Play(); 
         projectile.gameObject.SetActive(false);
         projectile.HasFinished = false;
-        bang.Play();
         StartCoroutine(new Delay().DelayAndProcessAction(
             () => {
                 Destroy(bang.gameObject);

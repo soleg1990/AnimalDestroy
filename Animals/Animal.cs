@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class Animal : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+    public bool IsGroundCollision; //грубо говоря, если скинули мимо катапульты
+
+    private void OnEnable()
+    {
+        isCollisionEnterOnce = false;
+        IsGroundCollision = false;
+    }
+
+    // Use this for initialization
+    void Start () {
+        
 	}
 	
 	// Update is called once per frame
@@ -15,10 +23,22 @@ public class Animal : MonoBehaviour {
 		
 	}
 
+    private bool isCollisionEnterOnce;
     private void OnCollisionEnter(Collision collision)
     {
+        if (isCollisionEnterOnce) return;
+
+        isCollisionEnterOnce = true;
+
         StartCoroutine(new Delay().DelayAndProcessAction(
-            () => gameObject.SetActive(false),
+            () => 
+            {
+                if (collision.gameObject.tag == "Ground")
+                {
+                    IsGroundCollision = true;
+                }
+                gameObject.SetActive(false);
+            },
             3f
         ));
     }

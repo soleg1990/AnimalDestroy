@@ -10,6 +10,7 @@ public class PlayerAttack : MonoBehaviour {
     [SerializeField] Transform ProjectileTransform;
 
     private GameObject animal;
+    private Animal animalComponent;
     private Rigidbody animalRig;
     private Collider animalCollider;
     private bool makeAim;
@@ -22,21 +23,28 @@ public class PlayerAttack : MonoBehaviour {
 
     public void TakeTurn(Projectile projectile)
     {
+        IhaveMissed = false;
+        isMyTurn = true;
+        animalSpent = false;
+
+        projectile.gameObject.SetActive(false);
         projectile.GetComponent<Rigidbody>().velocity = new Vector3();
         projectile.transform.position = ProjectileTransform.position;
         //projectile.HasFinished = false;
         projectile.gameObject.SetActive(true);
-
-        isMyTurn = true;
-        animalSpent = false;
     }
 
     public void GiveTurn()
     {
         isMyTurn = false;
+        IhaveMissed = false;
     }
 
-    //TODO из критических недоработок сейчас: промах животного и меню для выхода)
+    public bool IhaveMissed;
+
+    //TODO менять ширину полосы здоровья в зависимости от ширины экрана
+    //TODO при попадании рядом наносить немного урона
+    //TODO звук падающей доски
     //TODO возможность включать/выключать звуки и музыку
     //todo иногда наблюдается баг - животное исчезает. И кнопки тоже задизейблены при этом)
     //todo сделать нормальный фон за пределами игрового поля
@@ -48,7 +56,6 @@ public class PlayerAttack : MonoBehaviour {
     //  Но в таком случае это уже либо не пошаговая игра будет, либо пехота должна останавливаться, когда ход переходит
     //TODO вместо PlayerWin текста показывать целое окно, в котором будет возможность рестарта или возврата в меню. 
     //      Окно будет показываться при выигрыше, нажатии на Esc или клику на красивую кнопочку с крестиком
-    //TODO если игрок промахнулся животным, то ход переходит следующему (можно тупо проверять, что если после исчезновения животного снаряд все еще на месте, то промах)
     //TODO при смерти катапульты - частицы с черепами
     //TODO рефакторинг - сделать фабрику животных. Все равно только 1 экземпляр в единицу времени, так пусть и список префабов будет у одного объекта
     //TODO выход из игры (меню при нажатии на Esc и при победе одного из игроков)
@@ -88,6 +95,14 @@ public class PlayerAttack : MonoBehaviour {
                 makeAim = false;
             }
         }
+        else
+        {
+            if (animal && animalComponent.IsGroundCollision)
+            {
+                animalComponent.IsGroundCollision = false;
+                IhaveMissed = true;
+            }
+        }
     }
 
     public void CreateSheep()
@@ -112,6 +127,7 @@ public class PlayerAttack : MonoBehaviour {
         if (animal && animal.activeSelf)
             animal.SetActive(false);
         animal = createdAnimal;
+        animalComponent = animal.GetComponent<Animal>();
         SetAnimalTransform();
         animalRig = createdAnimal.GetComponent<Rigidbody>();
         animalRig.isKinematic = true;

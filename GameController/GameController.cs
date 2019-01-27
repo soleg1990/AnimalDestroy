@@ -84,7 +84,7 @@ public class GameController : MonoBehaviour {
         {
             BlowUpProjectile();
         }
-        if (canChangeActivePlayer)
+        if (canChangeActivePlayer || player1Attack.IhaveMissed || player2Attack.IhaveMissed)
         {
             ChangePlayer();
         }
@@ -142,7 +142,7 @@ public class GameController : MonoBehaviour {
             player1Attack.GiveTurn();
             if (player2Health.CurrentHealth > 0) player2Attack.TakeTurn(projectile);
         }
-        else
+        else if (player2Attack.IsMyTurn)
         {
             player2Attack.GiveTurn();
             if (player1Health.CurrentHealth > 0) player1Attack.TakeTurn(projectile);

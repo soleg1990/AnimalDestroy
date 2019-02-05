@@ -29,8 +29,10 @@ public class PlayerHealth : MonoBehaviour {
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        healthSlider.value = Mathf.Clamp(currentHealth, 0f, maxHealth);
-
+        if (healthSlider)
+        {
+            healthSlider.value = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        }
         if (currentHealth <= 0)
         {
             CrushCatapult();

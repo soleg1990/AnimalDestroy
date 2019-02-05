@@ -1,47 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.Scripts.Player;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour {
-
-    [SerializeField] GameObject sheep;
-    [SerializeField] GameObject pig;
-    [SerializeField] GameObject cow;
-    [SerializeField] Transform ProjectileTransform;
-
-    private GameObject animal;
-    private Animal animalComponent;
-    private Rigidbody animalRig;
-    private Collider animalCollider;
-    private bool makeAim;
-
-    private bool isMyTurn;
-    public bool IsMyTurn { get { return isMyTurn; } }
-
-    private bool animalSpent;
-    public bool AnimalSpent { get { return animalSpent; } }
-
-    public void TakeTurn(Projectile projectile)
-    {
-        IhaveMissed = false;
-        isMyTurn = true;
-        animalSpent = false;
-
-        projectile.gameObject.SetActive(false);
-        projectile.GetComponent<Rigidbody>().velocity = new Vector3();
-        projectile.transform.position = ProjectileTransform.position;
-        //projectile.HasFinished = false;
-        projectile.gameObject.SetActive(true);
-    }
-
-    public void GiveTurn()
-    {
-        isMyTurn = false;
-        IhaveMissed = false;
-    }
-
-    public bool IhaveMissed;
-
+public class PlayerAttack : PlayerAttackBase {
+    //TODO при борьбе с AI округлять его позицию до 1 знака после запятой
+    //TODO следить, чтобы AI не запоминал попадания в себя, как попадание во врага
+    //TODO при TakeTurn надо фиксировать рычаг, чтобы не болтался туда-сюда - либе жестко, либо ждать, когда сам зафиксируется
+    //TODO сделать округление дистанции до 1 знака после запятой. Тогда мой AI будет точен
+    //TODO паблик-свойства не надо отображать в эдиторе. Либо придумать, как без пабликов обойтись
     //TODO менять ширину полосы здоровья в зависимости от ширины экрана
     //TODO при попадании рядом наносить немного урона
     //TODO звук падающей доски
@@ -80,70 +45,13 @@ public class PlayerAttack : MonoBehaviour {
 
     //TODO сделать версию для андроида)
     //TODO а в версии для андроида сделать возможность покупать реактивные снаряды/прицельные и т.д. Ну и животных разных. И катапульту более красивую чтоб могли купить
-    void Update()
+    protected override Vector3 GetAnimalPosition()
     {
-        if (!isMyTurn) return;
-
-        if (makeAim)
-        {
-            SetAnimalTransform();
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                animalRig.isKinematic = false;
-                animalCollider.enabled = true;
-                makeAim = false;
-            }
-        }
-        else
-        {
-            if (animal && animalComponent.IsGroundCollision)
-            {
-                animalComponent.IsGroundCollision = false;
-                IhaveMissed = true;
-            }
-        }
+        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    public void CreateSheep()
+    protected override bool CanDropAnimal()
     {
-        CreateAnimal(sheep);
-    }
-
-    public void CreatePig()
-    {
-        CreateAnimal(pig);
-    }
-
-    public void CreateCow()
-    {
-        CreateAnimal(cow);
-        cow.GetComponent<AudioSource>().Play();
-    }
-
-    private void CreateAnimal(GameObject createdAnimal)
-    {
-        if (!isMyTurn) return;
-        if (animal && animal.activeSelf)
-            animal.SetActive(false);
-        animal = createdAnimal;
-        animalComponent = animal.GetComponent<Animal>();
-        SetAnimalTransform();
-        animalRig = createdAnimal.GetComponent<Rigidbody>();
-        animalRig.isKinematic = true;
-        animalCollider = createdAnimal.GetComponent<Collider>();
-        animalCollider.enabled = false;
-        createdAnimal.SetActive(true);
-        makeAim = true;
-        animalSpent = true;
-    }
-
-    void SetAnimalTransform()
-    {
-        var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        pos.z = 0;
-
-        animal.transform.position = pos;
-        animal.transform.rotation = Quaternion.Euler(0, 0, 0);
+        return Input.GetMouseButtonDown(0);
     }
 }

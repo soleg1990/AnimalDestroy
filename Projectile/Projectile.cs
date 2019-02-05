@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour {
 
     [SerializeField] float damage = 35f;
 
+    public bool HasHitTheEnemy { get; set; }
+
     private bool hasFinished;
     public bool HasFinished
     {
@@ -22,6 +24,7 @@ public class Projectile : MonoBehaviour {
             if (!hasFinished)
             {
                 hasFly = false;
+                HasHitTheEnemy = false;
             }
         }
     }
@@ -47,6 +50,7 @@ public class Projectile : MonoBehaviour {
             if (collisionObject.tag == "Player")
             {
                 collisionObject.GetComponentInParent<PlayerHealth>().TakeDamage(damage);
+                HasHitTheEnemy = true;
             }
 
             HasFinished = true;

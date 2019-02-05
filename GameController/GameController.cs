@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Utils;
+﻿using Assets.Scripts.Player;
+using Assets.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,8 +16,8 @@ public class GameController : MonoBehaviour {
     [SerializeField] ParticleSystem bangPrefab;
     [SerializeField] AudioClip explosion;
 
-    private PlayerAttack player1Attack;
-    private PlayerAttack player2Attack;
+    private PlayerAttackBase player1Attack;
+    private PlayerAttackBase player2Attack;
     private PlayerHealth player1Health;
     private PlayerHealth player2Health;
     private Projectile projectile;
@@ -33,8 +34,8 @@ public class GameController : MonoBehaviour {
         cameraOnStart = FindObjectOfType<CameraOnStart>();
         projectile = Instantiate(projectilePrefab);
         projectile.gameObject.SetActive(false);
-        player1Attack = player1.GetComponent<PlayerAttack>();
-        player2Attack = player2.GetComponent<PlayerAttack>();
+        player1Attack = player1.GetComponent<PlayerAttackBase>();
+        player2Attack = player2.GetComponent<PlayerAttackBase>();
         player1Health = player1.GetComponent<PlayerHealth>();
         player2Health = player2.GetComponent<PlayerHealth>();
         SetPlayer2RandomPosition();
@@ -43,7 +44,7 @@ public class GameController : MonoBehaviour {
     private void SetPlayer2RandomPosition()
     {
         var temp = player2.transform.position;
-        temp.x = Random.Range(5f, 22f);
+        temp.x = (float)System.Math.Round(Random.Range(5f, 22f), 1);
         player2.transform.position = temp;
     }
 

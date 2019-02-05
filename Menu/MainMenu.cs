@@ -10,6 +10,11 @@ public class MainMenu : MonoBehaviour {
         SceneManager.LoadScene(1);
     }
 
+    public void OnPlayerVsAIClick()
+    {
+        SceneManager.LoadScene(2);
+    }
+
     public void OnQuitClick()
     {
         Application.Quit();
